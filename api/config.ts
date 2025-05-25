@@ -21,10 +21,7 @@ const parseConfigurationFile = (fileName: string) => {
 export const CONFIG = {
     /// Look for events every 1s
     POLLING_INTERVAL_MS: 1000,
-    DEFAULT_LIMIT: 50,
+    DEFAULT_LIMIT: 10,
     NETWORK: (process.env.NETWORK as Network) || "mainnet",
-    SWAP_CONTRACT: parseConfigurationFile("escrow-contract"),
-    DEMO_CONTRACT: parseConfigurationFile("demo-contract"),
-    SUINS_CONTRACT: parseConfigurationFile("test-contract"),
     CETUS_CONTRACT: parseConfigurationFile("ct-contract"),
 };

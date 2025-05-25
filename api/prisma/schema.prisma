@@ -52,24 +52,75 @@ model Cursor {
   txDigest String
 }
 
-model SnsNameRegistered {
-  name              String   @id
-  owner             String
-  registrationTime  DateTime
+
+
+model CetusSwapEvent {
+  id         String   @id @default(cuid())
+  pool       String
+  amountIn   BigInt
+  amountOut  BigInt
+  a2b        Boolean
+  txDigest   String
+  eventSeq   String
+
+  @@unique([txDigest, eventSeq], name: "cetusSwap_txDigest_eventSeq")
 }
 
-model CetusEvent {
-  id           String   @id @default(cuid())
-  pool         String
-  amountIn     BigInt
-  amountOut    BigInt
-  a2b          Boolean
-  byAmountIn   Boolean
-  txDigest     String
-  eventSeq     String
+model CetusAddLiquidityEvent {
+  id         String   @id @default(cuid())
+  pool       String
+  position   String
+  tickLower  Int
+  tickUpper  Int
+  liquidity  BigInt
+  amountA    BigInt
+  amountB    BigInt
+  txDigest   String
+  eventSeq   String
 
-  @@unique([txDigest, eventSeq], name: "txDigest_eventSeq")
+  @@unique([txDigest, eventSeq], name: "cetusAddLiquidity_txDigest_eventSeq")
 }
+
+model CetusRemoveLiquidityEvent {
+  id         String   @id @default(cuid())
+  pool       String
+  position   String
+  tickLower  Int
+  tickUpper  Int
+  liquidity  BigInt
+  amountA    BigInt
+  amountB    BigInt
+  txDigest   String
+  eventSeq   String
+
+  @@unique([txDigest, eventSeq], name: "cetusRemoveLiquidity_txDigest_eventSeq")
+}
+
+model CetusCollectFeeEvent {
+  id         String   @id @default(cuid())
+  pool       String
+  position   String
+  amountA    BigInt
+  amountB    BigInt
+  txDigest   String
+  eventSeq   String
+
+  @@unique([txDigest, eventSeq], name: "cetusCollectFee_txDigest_eventSeq")
+}
+
+model CetusFlashLoanEvent {
+  id         String   @id @default(cuid())
+  pool       String
+  loanA      Boolean
+  partner    String
+  amount     BigInt
+  feeAmount  BigInt
+  txDigest   String
+  eventSeq   String
+
+  @@unique([txDigest, eventSeq], name: "cetusFlashLoan_txDigest_eventSeq")
+}
+
 
 
 

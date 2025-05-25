@@ -6,8 +6,6 @@ import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client
 import { CONFIG } from "../config";
 import { prisma } from "../db";
 import { getClient } from "../sui-utils";
-import { handleEscrowObjects } from "./escrow-handler";
-import { handleLockObjects } from "./locked-handler";
 import { handleCetusEvents } from "./cetus-handler";
 
 type SuiEventsCursor = EventId | null | undefined;
@@ -26,31 +24,11 @@ type EventTracker = {
 
 const EVENTS_TO_TRACK: EventTracker[] = [
     {
-        type: `${CONFIG.SWAP_CONTRACT.packageId}::lock`,
-        filter: {
-            MoveEventModule: {
-                module: "lock",
-                package: CONFIG.SWAP_CONTRACT.packageId,
-            },
-        },
-        callback: handleLockObjects,
-    },
-    {
-        type: `${CONFIG.SWAP_CONTRACT.packageId}::shared`,
-        filter: {
-            MoveEventModule: {
-                module: "shared",
-                package: CONFIG.SWAP_CONTRACT.packageId,
-            },
-        },
-        callback: handleEscrowObjects,
-    },
-    {
-        type: "0xeffc8ae61f439bb34c9b905ff8f29ec56873dcedf81c7123ff2f1f67c45ec302::cetus",
+        type: `${CONFIG.CETUS_CONTRACT.packageId}::cetus`,
         filter: {
             MoveEventModule: {
                 module: "cetus",
-                package: "0xeffc8ae61f439bb34c9b905ff8f29ec56873dcedf81c7123ff2f1f67c45ec302",
+                package: CONFIG.CETUS_CONTRACT.packageId,
             },
         },
         callback: handleCetusEvents,
