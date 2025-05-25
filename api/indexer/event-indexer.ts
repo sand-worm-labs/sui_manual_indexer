@@ -24,14 +24,14 @@ type EventTracker = {
 };
 
 const cetusEventTypes = [
-    "AddLiquidityEvent",
+    "CetusSwapEvent",
     "RemoveLiquidityEvent",
+    "AddLiquidityEvent",
     "CollectFeeEvent",
     "FlashLoanEvent",
 ];
 
 const EVENTS_TO_TRACK: EventTracker[] = [
-    // 🐳 Cetus Events
     ...cetusEventTypes.map((eventName) => ({
         type: `${CONFIG.CETUS_CONTRACT.packageId}::pool::${eventName}`,
         filter: {
