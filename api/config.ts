@@ -21,7 +21,8 @@ const parseConfigurationFile = (fileName: string) => {
 export const CONFIG = {
     /// Look for events every 1s
     POLLING_INTERVAL_MS: 1000,
-    DEFAULT_LIMIT: 10,
+    DEFAULT_LIMIT: 50,
     NETWORK: (process.env.NETWORK as Network) || "mainnet",
     CETUS_CONTRACT: parseConfigurationFile("ct-contract"),
+    SCALLOP_CONTRACT: parseConfigurationFile("scallop-contract"),
 };

@@ -47,6 +47,32 @@ export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
 
         const { txDigest, eventSeq } = event.id;
 
+        if (event.type.endsWith("::AddLiquidityEvent")) {
+            console.log("event type:", event.type);
+            const data = event.parsedJson as AddLiquidityEvent;
+
+            toUpsert.push(
+                prisma.cetusAddLiquidityEvent.upsert({
+                    where: {
+                        cetusAddLiquidity_txDigest_eventSeq: { txDigest, eventSeq },
+                    },
+                    update: {},
+                    create: {
+                        pool: data.pool,
+                        position: data.position,
+                        tickLower: (data.tick_lower as any).bits,
+                        tickUpper: (data.tick_upper as any).bits,
+                        liquidity: BigInt(data.liquidity),
+                        amountA: BigInt(data.amount_a),
+                        amountB: BigInt(data.amount_b),
+                        txDigest,
+                        eventSeq,
+                    },
+                }),
+            );
+            continue;
+        }
+
         // 🌀 SWAP
         if (event.type.endsWith("::CetusSwapEvent")) {
             const data = event.parsedJson as CetusSwapEvent;
@@ -71,33 +97,10 @@ export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
         }
 
         // 🧪 ADD LIQ
-        if (event.type.endsWith("::AddLiquidityEvent")) {
-            const data = event.parsedJson as AddLiquidityEvent;
-
-            toUpsert.push(
-                prisma.cetusAddLiquidityEvent.upsert({
-                    where: {
-                        cetusAddLiquidity_txDigest_eventSeq: { txDigest, eventSeq },
-                    },
-                    update: {},
-                    create: {
-                        pool: data.pool,
-                        position: data.position,
-                        tickLower: data.tick_lower,
-                        tickUpper: data.tick_upper,
-                        liquidity: BigInt(data.liquidity),
-                        amountA: BigInt(data.amount_a),
-                        amountB: BigInt(data.amount_b),
-                        txDigest,
-                        eventSeq,
-                    },
-                }),
-            );
-            continue;
-        }
 
         // 🧯 REMOVE LIQ
         if (event.type.endsWith("::RemoveLiquidityEvent")) {
+            console.log("event type:", event.type);
             const data = event.parsedJson as RemoveLiquidityEvent;
 
             toUpsert.push(
@@ -109,8 +112,8 @@ export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
                     create: {
                         pool: data.pool,
                         position: data.position,
-                        tickLower: data.tick_lower,
-                        tickUpper: data.tick_upper,
+                        tickLower: (data.tick_lower as any).bits,
+                        tickUpper: (data.tick_upper as any).bits,
                         liquidity: BigInt(data.liquidity),
                         amountA: BigInt(data.amount_a),
                         amountB: BigInt(data.amount_b),

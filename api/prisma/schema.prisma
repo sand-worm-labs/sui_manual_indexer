@@ -13,114 +13,178 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-/// Our `Locked` objects list
-model Locked {
-  // Keeping an ID so we can use as a pagination cursor
-  // There's an issue with BigInt for sqlite, so we're using a plain ID.
-  id Int @id @default(autoincrement())
-  objectId String @unique
-  keyId String?
-  creator String?
-  itemId String?
-  deleted Boolean @default(false)
 
-  @@index([creator])
-  @@index([deleted])
-}
 
-/// Our swap objects list
-model Escrow {
-  // Keeping an ID so we can use as a pagination cursor
-  // There's an issue with BigInt for sqlite, so we're using a plain ID.
-  id Int @id @default(autoincrement())
-  objectId String @unique
-  sender String?
-  recipient String?
-  keyId String?
-  itemId String?
-  swapped Boolean @default(false)
-  cancelled Boolean @default(false)
-  
-  @@index([recipient])
-  @@index([sender])
-}
 
 /// Saves the latest cursor for a given key.
 model Cursor {
-  id String @id
+  id       String @id
   eventSeq String
   txDigest String
 }
 
-
-
 model CetusSwapEvent {
-  id         String   @id @default(cuid())
-  pool       String
-  amountIn   BigInt
-  amountOut  BigInt
-  a2b        Boolean
-  txDigest   String
-  eventSeq   String
+  id        String  @id @default(cuid())
+  pool      String
+  amountIn  BigInt
+  amountOut BigInt
+  a2b       Boolean
+  txDigest  String
+  eventSeq  String
 
   @@unique([txDigest, eventSeq], name: "cetusSwap_txDigest_eventSeq")
 }
 
 model CetusAddLiquidityEvent {
-  id         String   @id @default(cuid())
-  pool       String
-  position   String
-  tickLower  Int
-  tickUpper  Int
-  liquidity  BigInt
-  amountA    BigInt
-  amountB    BigInt
-  txDigest   String
-  eventSeq   String
+  id        String @id @default(cuid())
+  pool      String
+  position  String
+  tickLower BigInt
+  tickUpper BigInt
+  liquidity BigInt
+  amountA   BigInt
+  amountB   BigInt
+  txDigest  String
+  eventSeq  String
 
   @@unique([txDigest, eventSeq], name: "cetusAddLiquidity_txDigest_eventSeq")
 }
 
 model CetusRemoveLiquidityEvent {
-  id         String   @id @default(cuid())
-  pool       String
-  position   String
-  tickLower  Int
-  tickUpper  Int
-  liquidity  BigInt
-  amountA    BigInt
-  amountB    BigInt
-  txDigest   String
-  eventSeq   String
+  id        String @id @default(cuid())
+  pool      String
+  position  String
+  tickLower BigInt
+  tickUpper BigInt
+  liquidity BigInt
+  amountA   BigInt
+  amountB   BigInt
+  txDigest  String
+  eventSeq  String
 
   @@unique([txDigest, eventSeq], name: "cetusRemoveLiquidity_txDigest_eventSeq")
 }
 
 model CetusCollectFeeEvent {
-  id         String   @id @default(cuid())
-  pool       String
-  position   String
-  amountA    BigInt
-  amountB    BigInt
-  txDigest   String
-  eventSeq   String
+  id       String @id @default(cuid())
+  pool     String
+  position String
+  amountA  BigInt
+  amountB  BigInt
+  txDigest String
+  eventSeq String
 
   @@unique([txDigest, eventSeq], name: "cetusCollectFee_txDigest_eventSeq")
 }
 
 model CetusFlashLoanEvent {
-  id         String   @id @default(cuid())
-  pool       String
-  loanA      Boolean
-  partner    String
-  amount     BigInt
-  feeAmount  BigInt
-  txDigest   String
-  eventSeq   String
+  id        String  @id @default(cuid())
+  pool      String
+  loanA     Boolean
+  partner   String
+  amount    BigInt
+  feeAmount BigInt
+  txDigest  String
+  eventSeq  String
 
   @@unique([txDigest, eventSeq], name: "cetusFlashLoan_txDigest_eventSeq")
 }
 
+model ScallopBorrowDynamic {
+  id                String @id @default(uuid())
+  coinType          String @unique
+  borrowIndex       String @default("")
+  interestRate      String @default("")
+  interestRateScale String @default("")
+  lastUpdated       String @default("")
+}
+
+model ScallopDeposit {
+  id            String            @id @default(uuid())
+  asset         String?
+  amount        String?
+  timestampMs   String?
+  obligation_id String
+  obligation    ScallopObligation @relation(fields: [obligation_id], references: [obligation_id])
+}
 
 
+model ScallopMint {
+  id             String   @id @default(uuid())
+  depositAsset   String?
+  depositAmount  String?
+  mintAsset      String?
+  mintAmount     String?
+  minter         String?
+  mintTime       String?
+  timestampMs    String?
+}
 
+model ScallopRedeem {
+  id            String   @id @default(uuid())
+  sender        String 
+  withdrawAsset String?
+  withdrawAmount String?
+  burnAsset     String?
+  burnAmount    String?
+  redeemer      String?
+  redeemTime    String?
+  timestampMs   String?
+}
+
+
+model ScallopTransfer {
+  id          String @id @default(uuid())
+  type        String
+  borrower    String
+  asset       String
+  amount      String
+  timestampMs String
+}
+
+model ScallopWithdraw {
+  id            String            @id @default(uuid())
+  asset         String?
+  amount        String?
+  timestampMs   String?
+  taker         String?
+  obligation_id String
+  obligation    ScallopObligation @relation(fields: [obligation_id], references: [obligation_id])
+}
+
+model ScallopCollateral {
+  id            String            @id @default(uuid())
+  asset         String?
+  amount        String?
+  obligation    ScallopObligation @relation(fields: [obligation_id], references: [obligation_id])
+  obligation_id String
+}
+
+model ScallopDebt {
+  id            String            @id @default(uuid())
+  asset         String?
+  amount        String?
+  borrowIndex   String
+  obligation    ScallopObligation @relation(fields: [obligation_id], references: [obligation_id])
+  obligation_id String
+}
+
+model ScallopObligation {
+  id                    String              @id @default(uuid())
+  obligation_id         String              @unique
+  obligation_key        String?
+  sender                String?
+  version               String?
+  timestampMs           String?
+  collaterals           ScallopCollateral[]
+  debts                 ScallopDebt[]
+  collaterals_parent_id String?
+  debts_parent_id       String?
+  collaterals_count     Int                 @default(0)
+  debts_count           Int                 @default(0)
+  deposits              ScallopDeposit[]
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  withdraws ScallopWithdraw[]
+}

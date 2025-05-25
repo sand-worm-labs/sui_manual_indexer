@@ -7,6 +7,7 @@ import { CONFIG } from "../config";
 import { prisma } from "../db";
 import { getClient } from "../sui-utils";
 import { handleCetusEvents } from "./cetus-handler";
+import { scallopEventSubscriptions } from "../helpers/event-filter_scallop";
 
 type SuiEventsCursor = EventId | null | undefined;
 
@@ -22,17 +23,26 @@ type EventTracker = {
     callback: (events: SuiEvent[], type: string) => any;
 };
 
+const cetusEventTypes = [
+    "AddLiquidityEvent",
+    "RemoveLiquidityEvent",
+    "CollectFeeEvent",
+    "FlashLoanEvent",
+];
+
 const EVENTS_TO_TRACK: EventTracker[] = [
-    {
-        type: `${CONFIG.CETUS_CONTRACT.packageId}::cetus`,
+    // 🐳 Cetus Events
+    ...cetusEventTypes.map((eventName) => ({
+        type: `${CONFIG.CETUS_CONTRACT.packageId}::pool::${eventName}`,
         filter: {
             MoveEventModule: {
-                module: "cetus",
+                module: "pool",
                 package: CONFIG.CETUS_CONTRACT.packageId,
             },
         },
         callback: handleCetusEvents,
-    },
+    })),
+    // ...scallopEventSubscriptions,
 ];
 
 const executeEventJob = async (
@@ -119,8 +129,18 @@ const saveLatestCursor = async (tracker: EventTracker, cursor: EventId) => {
 
 /// Sets up all the listeners for the events we want to track.
 /// They are polling the RPC endpoint every second.
-export const setupListeners = async () => {
+/* export const setupListeners = async () => {
     for (const event of EVENTS_TO_TRACK) {
         runEventJob(getClient(CONFIG.NETWORK), event, await getLatestCursor(event));
     }
+}; */
+
+export const setupListeners = async () => {
+    await Promise.all(
+        EVENTS_TO_TRACK.map(async (event) => {
+            const client = getClient(CONFIG.NETWORK);
+            const latestCursor = await getLatestCursor(event);
+            return runEventJob(client, event, latestCursor);
+        }),
+    );
 };
