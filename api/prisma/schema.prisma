@@ -26,9 +26,10 @@ model Cursor {
 model CetusSwapEvent {
   id        String  @id @default(cuid())
   pool      String
-  amountIn  BigInt
-  amountOut BigInt
-  a2b       Boolean
+  amount_in  BigInt
+  amount_out BigInt
+  atob       Boolean
+  fee_amount BigInt
   txDigest  String
   eventSeq  String
 

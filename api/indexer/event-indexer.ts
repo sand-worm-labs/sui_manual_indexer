@@ -6,8 +6,8 @@ import { EventId, SuiClient, SuiEvent, SuiEventFilter } from "@mysten/sui/client
 import { CONFIG } from "../config";
 import { prisma } from "../db";
 import { getClient } from "../sui-utils";
-import { handleCetusEvents } from "./cetus-handler";
 import { scallopEventSubscriptions } from "../helpers/event-filter_scallop";
+import { cetusEventSubscriptions } from "../helpers/event-filter-cetus";
 
 type SuiEventsCursor = EventId | null | undefined;
 
@@ -32,7 +32,7 @@ const cetusEventTypes = [
 ];
 
 const EVENTS_TO_TRACK: EventTracker[] = [
-    ...cetusEventTypes.map((eventName) => ({
+    /*  ...cetusEventTypes.map((eventName) => ({
         type: `${CONFIG.CETUS_CONTRACT.packageId}::pool::${eventName}`,
         filter: {
             MoveEventModule: {
@@ -41,7 +41,8 @@ const EVENTS_TO_TRACK: EventTracker[] = [
             },
         },
         callback: handleCetusEvents,
-    })),
+    })), */
+    ...cetusEventSubscriptions,
     // ...scallopEventSubscriptions,
 ];
 
