@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # Start database setup and app
-CMD ["sh", "-c", "pnpm db:setup:dev && pnpm dev"]
+CMD ["sh", "-c", "pnpm indexer"]
