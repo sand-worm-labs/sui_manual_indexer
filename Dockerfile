@@ -1,24 +1,23 @@
-# Use a Node.js base image with pnpm pre-installed
+# Use Node.js base image
 FROM node:20
 
-# Set working directory
+# Enable and prepare pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory inside container
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --ignore-workspace
+# Copy only package.json first (no pnpm-lock.yaml)
+COPY package.json ./
 
-# Copy the rest of the app
+# Install dependencies
+RUN pnpm install --ignore-workspace
+
+# Copy the rest of the project files
 COPY . .
 
-# Setup the database (adjust if you use external services or this runs only once)
-RUN pnpm db:setup:dev
-
-# Publish contracts and demo data — replace this with your actual script if needed
-# RUN pnpm contract:publish && pnpm seed:demo
-
-# Expose the port your app runs on
+# Expose the port (optional, if your app serves something)
 EXPOSE 3000
 
-# Start the app and indexer (adjust if these are separate commands)
-CMD ["pnpm", "dev"]
+# Start database setup and app
+CMD ["sh", "-c", "pnpm db:setup:dev && pnpm dev"]
