@@ -53,7 +53,7 @@ pnpm-lock.yaml
 ui-debug.log
 firebase-debug.log
 
-*.log
+*.logls
 
 cypress/videos/
 cypress/screenshots/

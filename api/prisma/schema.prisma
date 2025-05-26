@@ -32,6 +32,8 @@ model CetusSwapEvent {
   fee_amount BigInt
   txDigest  String
   eventSeq  String
+  sender       String   
+  timestampMs  BigInt 
 
   @@unique([txDigest, eventSeq], name: "cetusSwap_txDigest_eventSeq")
 }
@@ -42,11 +44,13 @@ model CetusAddLiquidityEvent {
   position  String
   tickLower BigInt
   tickUpper BigInt
-  liquidity BigInt
+  liquidity String
   amountA   BigInt
   amountB   BigInt
   txDigest  String
   eventSeq  String
+   sender       String   
+  timestampMs  BigInt 
 
   @@unique([txDigest, eventSeq], name: "cetusAddLiquidity_txDigest_eventSeq")
 }
@@ -57,11 +61,13 @@ model CetusRemoveLiquidityEvent {
   position  String
   tickLower BigInt
   tickUpper BigInt
-  liquidity BigInt
+  liquidity String
   amountA   BigInt
   amountB   BigInt
   txDigest  String
   eventSeq  String
+   sender       String   
+  timestampMs  BigInt 
 
   @@unique([txDigest, eventSeq], name: "cetusRemoveLiquidity_txDigest_eventSeq")
 }
@@ -74,6 +80,8 @@ model CetusCollectFeeEvent {
   amountB  BigInt
   txDigest String
   eventSeq String
+   sender       String   
+  timestampMs  BigInt 
 
   @@unique([txDigest, eventSeq], name: "cetusCollectFee_txDigest_eventSeq")
 }

@@ -23,27 +23,8 @@ type EventTracker = {
     callback: (events: SuiEvent[], type: string) => any;
 };
 
-const cetusEventTypes = [
-    "CetusSwapEvent",
-    "RemoveLiquidityEvent",
-    "AddLiquidityEvent",
-    "CollectFeeEvent",
-    "FlashLoanEvent",
-];
-
 const EVENTS_TO_TRACK: EventTracker[] = [
-    /*  ...cetusEventTypes.map((eventName) => ({
-        type: `${CONFIG.CETUS_CONTRACT.packageId}::pool::${eventName}`,
-        filter: {
-            MoveEventModule: {
-                module: "pool",
-                package: CONFIG.CETUS_CONTRACT.packageId,
-            },
-        },
-        callback: handleCetusEvents,
-    })), */
-    ...cetusEventSubscriptions,
-    // ...scallopEventSubscriptions,
+    ...cetusEventSubscriptions /* ...scallopEventSubscriptions */,
 ];
 
 const executeEventJob = async (
@@ -58,7 +39,7 @@ const executeEventJob = async (
         const { data, hasNextPage, nextCursor } = await client.queryEvents({
             query: tracker.filter,
             cursor,
-            order: "ascending",
+            order: "descending",
         });
 
         // handle the data transformations defined for each event

@@ -4,7 +4,6 @@ import { CONFIG } from "../config";
 import { handleCetusEvents } from "../indexer/cetus-handler";
 
 const cetusEventTypes = [
-    "pool::SwapEvent",
     "pool::AddLiquidityEvent",
     "pool::RemoveLiquidityEvent",
     "pool::CollectFeeEvent",
@@ -17,13 +16,13 @@ export const cetusEventSubscriptions = cetusEventTypes.map((eventType) => {
     const packageId = isRelative ? CONFIG.CETUS_CONTRACT.packageId : parts[0];
     const module = isRelative ? parts[0] : parts[1];
 
-    console.log(parts, isRelative);
+    console.log(parts, module, isRelative);
 
     return {
         type: packageId,
         filter: {
             MoveEventModule: {
-                module,
+                module: "pool",
                 package: packageId,
             },
         },

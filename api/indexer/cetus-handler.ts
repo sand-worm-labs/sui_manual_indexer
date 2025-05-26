@@ -18,8 +18,8 @@ export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
     const toUpsert: Promise<any>[] = [];
 
     for (const event of events) {
+        console.log(type);
         if (!event.type.startsWith(type)) continue;
-        console.log("event", event);
 
         if (event.type.endsWith("::AddLiquidityEvent")) {
             await handleAddLiquidity(event, event.parsedJson as AddLiquidityEvent);
