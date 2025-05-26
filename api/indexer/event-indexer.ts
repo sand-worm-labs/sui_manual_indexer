@@ -23,9 +23,7 @@ type EventTracker = {
     callback: (events: SuiEvent[], type: string) => any;
 };
 
-const EVENTS_TO_TRACK: EventTracker[] = [
-    ...cetusEventSubscriptions /* ...scallopEventSubscriptions */,
-];
+const EVENTS_TO_TRACK: EventTracker[] = [...cetusEventSubscriptions, ...scallopEventSubscriptions];
 
 const executeEventJob = async (
     client: SuiClient,

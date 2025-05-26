@@ -15,6 +15,7 @@ import {
 import { CetusSwapEvent } from "@prisma/client";
 
 export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
+    console.log(events, type);
     const toUpsert: Promise<any>[] = [];
 
     for (const event of events) {

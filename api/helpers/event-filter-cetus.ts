@@ -6,6 +6,7 @@ import { handleCetusEvents } from "../indexer/cetus-handler";
 const cetusEventTypes = [
     "pool::AddLiquidityEvent",
     "pool::RemoveLiquidityEvent",
+    "pool::SwapEvent",
     "pool::CollectFeeEvent",
     "pool::FlashLoanEvent",
 ] as const;
