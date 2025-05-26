@@ -15,11 +15,10 @@ import {
 import { CetusSwapEvent } from "@prisma/client";
 
 export const handleCetusEvents = async (events: SuiEvent[], type: string) => {
-    console.log(events, type);
     const toUpsert: Promise<any>[] = [];
 
     for (const event of events) {
-        console.log(type);
+       
         if (!event.type.startsWith(type)) continue;
 
         if (event.type.endsWith("::AddLiquidityEvent")) {

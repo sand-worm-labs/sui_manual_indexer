@@ -47,7 +47,7 @@ export type FlashLoanEvent = {
 };
 
 export const handleAddLiquidity = async (event: SuiEvent, data: AddLiquidityEvent) => {
-    console.log(event, data);
+   
 
     const { txDigest, eventSeq } = event.id;
     return prisma.cetusAddLiquidityEvent.upsert({
@@ -89,7 +89,6 @@ export const handleCetusSwap = async (event: SuiEvent, data: CetusSwapEvent) => 
 };
 
 export const handleRemoveLiquidity = async (event: SuiEvent, data: RemoveLiquidityEvent) => {
-    console.log(event, data);
 
     const { txDigest, eventSeq } = event.id;
     return prisma.cetusRemoveLiquidityEvent.upsert({

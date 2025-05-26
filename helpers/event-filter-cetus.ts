@@ -17,7 +17,6 @@ export const cetusEventSubscriptions = cetusEventTypes.map((eventType) => {
     const packageId = isRelative ? CONFIG.CETUS_CONTRACT.packageId : parts[0];
     const module = isRelative ? parts[0] : parts[1];
 
-    console.log(parts, module, isRelative);
 
     return {
         type: packageId,
