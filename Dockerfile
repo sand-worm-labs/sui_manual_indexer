@@ -1,23 +1,20 @@
-# Use Node.js base image
+# Use Node.js 20 base image
 FROM node:20
-
-# Enable and prepare pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Set working directory inside container
 WORKDIR /app
 
-# Copy only package.json first (no pnpm-lock.yaml)
-COPY package.json ./
+# Copy package.json and package-lock.json for deterministic installs
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN pnpm install --ignore-workspace
+# Install dependencies with npm
+RUN npm install
 
-# Copy the rest of the project files
+# Copy the rest of your project files
 COPY . .
 
-# Expose the port (optional, if your app serves something)
+# Expose port 3000 (if your app serves HTTP)
 EXPOSE 3000
 
-# Start database setup and app
-CMD ["sh", "-c", "pnpm indexer"]
+# Start your app/indexer
+CMD ["npm", "run", "indexer"]
