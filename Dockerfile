@@ -4,9 +4,6 @@ FROM node:20
 # Set working directory inside container
 WORKDIR /app
 
-# Copy package.json and package-lock.json for deterministic installs
-COPY package.json package-lock.json ./
-
 # Install dependencies with npm
 RUN npm install
 
