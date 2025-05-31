@@ -5,11 +5,10 @@
 	"description": "Demo package for escrow",
 	"main": "server.ts",
 	"scripts": {
-		"dev": "concurrently \"pnpm api:dev\" \"pnpm indexer\"",
+		"dev": "concurrently \"pnpm indexer\"",
 		"db:setup:dev": "npx prisma migrate dev --name init",
 		"db:reset:dev": "npx prisma db push --force-reset",
 		"db:studio": "npx prisma studio",
-		"api:dev": "npx ts-node server.ts",
 		"indexer": "npx ts-node indexer.ts"
 	},
 	"keywords": [],
@@ -28,8 +27,10 @@
 		"@mysten/sui": "^1.18.0",
 		"@prisma/client": "^6.6.0",
 		"cors": "^2.8.5",
+		"dotenv": "^16.5.0",
 		"express": "^4.21.2",
 		"fs": "0.0.1-security",
-		"json2csv": "6.0.0-alpha.2"
+		"json2csv": "6.0.0-alpha.2",
+		"p-limit": "^6.2.0"
 	}
 }
